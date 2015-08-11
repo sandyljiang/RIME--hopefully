@@ -13,6 +13,7 @@ var user = new Parse.User();
 var username=prompt('enter username');
 var password = prompt('enter password');
 user.set("username", username);
+console.log('pass');
 user.set("password", password);
 user.signUp(null, {
   success: function(user) {
@@ -29,11 +30,20 @@ function checkInvites(){
   query.equalTo("user", "bubbba");
   query.find({
     success: function(results) {
-      alert("Successfully retrieved " + results.length + " scores.");
+      console.log("Successfully retrieved " + results.length + " scores.");
       // Do something with the returned Parse.Object values
       for (var i = 0; i < results.length; i++) {
         var object = results[i];
-        console.log(object.id + ' - ' + object.get('user'));
+        //console.log('object.id + ' - ' + object.get(\'user\')');
+		var items = document.getElementById("bookmarks");
+		var item = document.createElement("li");
+		item.innerHTML = object.get('user')+' '+ object.id;
+		items.appendChild(item);
+		var btn = document.createElement("BUTTON");        // Create a <button> element
+		var t = document.createTextNode("accept");       // Create a text node
+		btn.appendChild(t);   		// Append the text to <button>
+		btn.id=object.id;
+		items.appendChild(btn);
       }
     },
     error: function(error) {
@@ -41,14 +51,9 @@ function checkInvites(){
     }
   });
 }
-setInterval('checkInvites',10000);
+setInterval('checkInvites()',10000);
 var GameScore = Parse.Object.extend("GameScore");
 var gameScore = new GameScore();
-
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-
 gameScore.save(null, {
   success: function(gameScore) {
     // Execute any logic that should take place after the object is saved.
